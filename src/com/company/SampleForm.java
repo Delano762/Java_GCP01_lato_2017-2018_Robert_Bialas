@@ -15,7 +15,7 @@ public class SampleForm extends JFrame {
     private JTextArea textArea1;
 
     public SampleForm(){
-        super("Hello World");
+        super("PovertyIRC");
 
         setContentPane(rootPanel);
 
