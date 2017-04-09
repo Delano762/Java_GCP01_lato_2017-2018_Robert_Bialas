@@ -4,11 +4,10 @@
 package com.example;
 
 import org.apache.commons.io.FileUtils;
-import sun.awt.image.ImageWatched;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,7 @@ public class Crawler {
     private final List<CrawlerListener> iterationFinishedListeners = new LinkedList<>();
     private final URL url;
     private final String outputDirectory;
-    private LinkedList<Student> currentData = new LinkedList<>();
+    private List<Student> currentData = new ArrayList<>();
     private long iteration = 0;
 
     public Crawler(URL url, String outputDirectory) {
@@ -32,6 +31,7 @@ public class Crawler {
     public void addStudentAddedListener(CrawlerListener crawlerListener) {
         studentAddedListeners.add(crawlerListener);
     }
+
     public void addStudentRemovedListener(CrawlerListener crawlerListener) {
         studentRemovedListeners.add(crawlerListener);
     }
@@ -47,10 +47,10 @@ public class Crawler {
     public void addIterationFinishedListeners(CrawlerListener crawlerListener) {
         iterationFinishedListeners.add(crawlerListener);
     }
+
     private void listenersCall(CrawlerEventType type, Student student, long iteration) {
         {
-            switch (type)
-            {
+            switch (type) {
 
                 case ADD:
                     for (CrawlerListener crawlerListener : studentAddedListeners)
@@ -79,65 +79,64 @@ public class Crawler {
             }
         }
     }
-    private List<Student> getAdded(List<Student> a,LinkedList<Student> b)
-    {
-        if(a.size()==0) return b;
-        if(b.size()==0) return a;
 
-        for(Student s:a)
-        {
-            System.out.println(s.toString());
+    private List<Student> getAdded(List<Student> a, List<Student> b) {
+        if (a.size() == 0) return b;
+        if (b.size() == 0) return a;
+
+        for (Student s : a) {
+            //    System.out.println(s.toString());
         }
-        for(Student s:b)
-        {
-            System.out.println(s.toString());
+        for (Student s : b) {
+            //     System.out.println(s.toString());
         }
-        List<Student> result=new LinkedList<Student>();
+        List<Student> result = new LinkedList<Student>();
         result.addAll(b);
         result.removeAll(a);
         return result;
     }
+
     public void run() throws Exception {
         if (url == null) throw new CrawlerException("Url is null");
         int AmountOfIterations = 2;
-        while (AmountOfIterations > 0) {
+        while (AmountOfIterations>0) {
             listenersCall(CrawlerEventType.ITERATION_START, null, iteration);//wywołanie listenerów
             File tmpFile = new File(outputDirectory + toString().valueOf(iteration));//tworzenie pliku tymczasowego
             FileUtils.copyURLToFile(url, tmpFile);
 
-            LinkedList<Student> previousData = currentData;
-            currentData.removeAll(currentData);
-            currentData.addAll(StudentsParser.parse(tmpFile));
+            //LinkedList<Student> previousData = currentData;
+            //currentData.removeAll(currentData);
+            //currentData.addAll(StudentsParser.parse(tmpFile));
+
+
+            List<Student> previousData = currentData;
+            currentData = StudentsParser.parse(tmpFile); // Parsujemy dane z pliku do currentData
 
             currentData.sort((a, b) -> (a.getLastName() + a.getFirstName()).compareToIgnoreCase(b.getLastName() + b.getFirstName()));
-            if(previousData!=null&&currentData!=null)
-                {
-                    List<Student> added = getAdded(previousData,currentData);
-                    List<Student> removed = getAdded(currentData,previousData);
+            if (previousData != null && currentData != null) {
+                List<Student> added = getAdded(previousData, currentData);
+                List<Student> removed = getAdded(currentData, previousData);
 
-                    if(added.size()==0 && removed.size()==0)
-                    {
-                        for (Student s : currentData)
-                        {
-                            listenersCall(CrawlerEventType.NO_CHANGE, s, iteration);
-                        }
-                    }else{
-                            for(Student s : added)
-                            {
-                                listenersCall(CrawlerEventType.ADD,s,iteration);
-                            }
-                            for(Student s : removed)
-                            {
-                                listenersCall(CrawlerEventType.DELETE,s,iteration);
-                            }
-                        }
+                if (added.size() == 0 && removed.size() == 0) {
+                    for (Student s : currentData) {
+                        listenersCall(CrawlerEventType.NO_CHANGE, s, iteration);
                     }
-                    Thread.sleep(1000);
-            iteration++;
-            AmountOfIterations--;
-            listenersCall(CrawlerEventType.ITERATION_END,null,iteration);
+                } else {
+                    for (Student s : added) {
+                        listenersCall(CrawlerEventType.ADD, s, iteration);
+                    }
+                    for (Student s : removed) {
+                        listenersCall(CrawlerEventType.DELETE, s, iteration);
+                    }
                 }
             }
+            Thread.sleep(1000);
+            iteration++;
+            AmountOfIterations--;
+            listenersCall(CrawlerEventType.ITERATION_END, null, iteration);
+        }
+    }
+
     @SuppressWarnings("Duplicates")
     public List<Student> extractStudents(OrderMode mode) {
 
