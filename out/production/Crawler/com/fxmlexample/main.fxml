@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="example.MainController">
+   <children>
+      <Label fx:id="text" layoutX="0.0" layoutY="0.0" text="Control:Test" />
+      <fx:include fx:id="control" layoutX="50.0" layoutY="70.0" source="control.fxml" text="bida jak huj" />
+      <fx:include fx:id="control2" layoutX="50.0" layoutY="90.0" source="control.fxml" text=".1..2..3." />
+      <Button layoutX="10.0" layoutY="140.0" text="HALO, KARTHUS, HALO!" onAction="#click" />
+   </children>
+</Pane>

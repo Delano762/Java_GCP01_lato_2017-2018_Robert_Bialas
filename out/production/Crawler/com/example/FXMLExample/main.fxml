@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FXMLExample.MainController">
+   <children>
+
+      <MenuBar prefHeight="320.0" prefWidth="470.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Program">
+               <items>
+                  <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#close" text="Close" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="About">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+
+      <TabPane fx:id="tabPane" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+         <tabs>
+            <Tab closable="false" text="Student">
+               <content>
+                  <fx:include fx:id="tab1" source="StudentsTab.fxml" />
+               </content>
+            </Tab>
+            <Tab closable="false" text="Log">
+               <content>
+                  <fx:include fx:id="tab2" source="LogTab.fxml" />
+               </content>
+            </Tab>
+            <Tab closable="false" text="Histogram">
+               <content>
+                  <fx:include fx:id="tab3" source="HistogramTab.fxml" />
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+
+   </children>
+</AnchorPane>
